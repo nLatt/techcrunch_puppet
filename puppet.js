@@ -3,6 +3,7 @@ const chalk = require("chalk")
 const fs = require('fs');
 
 const error = chalk.bold.red;
+const success = chalk.bold.green;
 
 (async () => {
 
@@ -40,13 +41,6 @@ const error = chalk.bold.red;
   // extracts the article's featured picture's link
   const article_featured_image_src = await page.evaluate("document.querySelector('img.article__featured-image').getAttribute('src')");
 
-  var viewSource = await page.goto(article_featured_image_src)
-  fs.writeFile("generated_files\\featured_image.png", await viewSource.buffer(), function (err) {
-    if (err) {
-      return console.log(err);
-    }
-  });
-
   var article_data_grouped = {
     "author": article_author,
     "author_twitter": article_author_twitter,
@@ -55,9 +49,30 @@ const error = chalk.bold.red;
     "article_featured_image_src": article_featured_image_src
   }
 
-  console.log(article_data_grouped);
+  // saves featured image as .png
+  var viewSource = await page.goto(article_featured_image_src);
+
+  fs.writeFile("generated_files\\featured_image.png", await viewSource.buffer(), function (err) {
+    if (err) {
+      return console.log(error("> Error writing file.", err));
+    } else {
+      return console.log(success("> Success writing file."));
+    }
+  });
+
+  // Writes grouped data to .json
+  const article_data_grouped_string = JSON.stringify(article_data_grouped);
+
+  fs.writeFile("generated_files\\article_data_grouped.json", article_data_grouped_string, function (err) {
+    if (err) {
+      return console.log(error("> Error writing file.", err));
+    } else {
+      return console.log(success("> Success writing file."));
+    }
+  });
 
   await page.pdf({path: "generated_files\\tech_articles.pdf", format: "A4"});
+
   await browser.close();
-  console.log(error("Browser Closed"));
+  console.log(error("\nBrowser Closed"));
 })();
