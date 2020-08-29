@@ -23,14 +23,25 @@ const error = chalk.bold.red;
   await page.goto(website);
   page.click("[name='agree']");
   await page.waitForNavigation({ waitUntil: 'networkidle2' });
-  page.once('load', () => console.log('✅ Main website is loaded'));
+  page.once('load', () => console.log('✅ Main website is loaded\n'));
   const article_url = await page.evaluate("document.querySelector('a.post-block__title__link').getAttribute('href')");
 
   await page.goto("https://techcrunch.com" + article_url);
 
-  const article_text = await page.evaluate("document.querySelector('div.article__byline').innerText");
-  console.log(article_text)
+  // extracts the author's name
+  const article_author = await page.evaluate("document.querySelector('div.article__byline a').innerText");
+  // extracts the author's twitter link
+  const article_author_twitter = await page.evaluate("document.querySelector('div.article__byline a').getAttribute('href')");
+  // extracts the article's date
+  const article_date = await page.evaluate("document.querySelector('time.full-date-time').innerText");
+  // extracts the article's content
+  const article_text = await page.evaluate("document.querySelector('div.article-content').innerText");
 
+
+  console.log(article_author);
+  console.log(article_date);
+  console.log(article_author_twitter);
+  
   await page.pdf({path: "generated_files\\tech_articles.pdf", format: "A4"});
   await browser.close();
   console.log(error("Browser Closed"));
