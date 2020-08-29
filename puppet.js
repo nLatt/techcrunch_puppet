@@ -1,5 +1,6 @@
 const puppeteer = require("puppeteer");
 const chalk = require("chalk")
+const fs = require('fs');
 
 const error = chalk.bold.red;
 
@@ -36,11 +37,15 @@ const error = chalk.bold.red;
   const article_date = await page.evaluate("document.querySelector('time.full-date-time').innerText");
   // extracts the article's content
   const article_text = await page.evaluate("document.querySelector('div.article-content').innerText");
+  // extracts the article's featured picture's link
+  const article_featured_image_src = await page.evaluate("document.querySelector('img.article__featured-image').getAttribute('src')");
 
-
+  fs.writeFile("generated_files\\featured_image_png", article_featured_image_src)
+  
   console.log(article_author);
   console.log(article_date);
   console.log(article_author_twitter);
+  console.log(article_featured_image_src);
 
   await page.pdf({path: "generated_files\\tech_articles.pdf", format: "A4"});
   await browser.close();
