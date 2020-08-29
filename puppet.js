@@ -1,11 +1,12 @@
 const puppeteer = require("puppeteer");
 
+
 (async () => {
 
   const website = "https://techcrunch.com/tag/series-a/"
 
   const browser = await puppeteer.launch({
-    headless: false,
+    headless: true,
     slowMo: 100,
   });
 
@@ -18,15 +19,17 @@ const puppeteer = require("puppeteer");
   });
 
   await page.goto(website);
-
   page.click("[name='agree']");
-
   await page.waitForNavigation({ waitUntil: 'networkidle2' });
-  page.waitFor(1500);
-  page.waitForSelector("a.post-block__title__link");
-  // article_url = await page.$eval("a.post-block__title__link", elm => elm.getAttribute("href"));
-  article_url = await page.evaluate("document.querySelector('a.post-block__title__link').getAttribute('href')");
+  const article_url = await page.evaluate("document.querySelector('a.post-block__title__link').getAttribute('href')");
+
   await page.goto("https://techcrunch.com" + article_url);
-  await page.pdf({path: "tech_articles.pdf", format: "A4"});
-  // page.click("a.post-block__title__link");
+  // await page.waitForNavigation({ waitUntil: 'networkidle2' });
+  // page.once('load', () => console.info('✅ Page is loaded'));
+  await page.pdf({path: "peter.pdf"})
+
+  // const article_text = await page.evaluate("document.querySelector(div.article-content).innerText");
+
+  await browser.close();
+  console.log("Browser Closed");
 })();
