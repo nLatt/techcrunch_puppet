@@ -1,5 +1,7 @@
 const puppeteer = require("puppeteer");
+const chalk = require("chalk")
 
+const error = chalk.bold.red;
 
 (async () => {
 
@@ -24,12 +26,12 @@ const puppeteer = require("puppeteer");
   const article_url = await page.evaluate("document.querySelector('a.post-block__title__link').getAttribute('href')");
 
   await page.goto("https://techcrunch.com" + article_url);
-  // await page.waitForNavigation({ waitUntil: 'networkidle2' });
-  // page.once('load', () => console.info('✅ Page is loaded'));
-  await page.pdf({path: "peter.pdf"})
+  await page.once('load', () => console.log('✅ Page is loaded'));
 
-  // const article_text = await page.evaluate("document.querySelector(div.article-content).innerText");
+  const article_text = await page.evaluate("document.querySelector('div.article-content').innerText");
+
+  console.log(article_text)
 
   await browser.close();
-  console.log("Browser Closed");
+  console.log(error("Browser Closed"));
 })();
