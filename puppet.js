@@ -47,10 +47,15 @@ const error = chalk.bold.red;
     }
   });
 
-  console.log(article_author);
-  console.log(article_date);
-  console.log(article_author_twitter);
-  console.log(article_featured_image_src);
+  var article_data_grouped = {
+    "author": article_author,
+    "author_twitter": article_author_twitter,
+    "article_date": article_date,
+    "article_text": article_text,
+    "article_featured_image_src": article_featured_image_src
+  }
+
+  console.log(article_data_grouped);
 
   await page.pdf({path: "generated_files\\tech_articles.pdf", format: "A4"});
   await browser.close();
