@@ -40,8 +40,13 @@ const error = chalk.bold.red;
   // extracts the article's featured picture's link
   const article_featured_image_src = await page.evaluate("document.querySelector('img.article__featured-image').getAttribute('src')");
 
-  fs.writeFile("generated_files\\featured_image_png", article_featured_image_src)
-  
+  var viewSource = await page.goto(article_featured_image_src)
+  fs.writeFile("generated_files\\featured_image.png", await viewSource.buffer(), function (err) {
+    if (err) {
+      return console.log(err);
+    }
+  });
+
   console.log(article_author);
   console.log(article_date);
   console.log(article_author_twitter);
