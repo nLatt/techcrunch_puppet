@@ -25,10 +25,12 @@ const success = chalk.bold.green;
   await page.goto(website);
   page.click("[name='agree']");
   await page.waitForNavigation({ waitUntil: 'networkidle2' });
-  page.once('load', () => console.log('✅ Main website is loaded\n'));
+  page.once('load', () => console.log(success('> ✅ Main website is loaded\n')));
   const article_url = await page.evaluate("document.querySelector('a.post-block__title__link').getAttribute('href')");
 
   await page.goto("https://techcrunch.com" + article_url);
+
+  await page.pdf({path: "generated_files\\tech_articles.pdf", format: "A4"});
 
   // extracts the author's name
   const article_author = await page.evaluate("document.querySelector('div.article__byline a').innerText");
@@ -71,8 +73,6 @@ const success = chalk.bold.green;
     }
   });
 
-  await page.pdf({path: "generated_files\\tech_articles.pdf", format: "A4"});
-
   await browser.close();
-  console.log(error("\nBrowser Closed"));
+  console.log(error("\n> Browser Closed"));
 })();
