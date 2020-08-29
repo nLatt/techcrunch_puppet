@@ -31,7 +31,7 @@ const error = chalk.bold.red;
   // extracts the author's name
   const article_author = await page.evaluate("document.querySelector('div.article__byline a').innerText");
   // extracts the author's twitter link
-  const article_author_twitter = await page.evaluate("document.querySelector('div.article__byline a').getAttribute('href')");
+  const article_author_twitter = await page.evaluate("document.querySelector('span.article__byline__meta a').getAttribute('href')");
   // extracts the article's date
   const article_date = await page.evaluate("document.querySelector('time.full-date-time').innerText");
   // extracts the article's content
@@ -41,7 +41,7 @@ const error = chalk.bold.red;
   console.log(article_author);
   console.log(article_date);
   console.log(article_author_twitter);
-  
+
   await page.pdf({path: "generated_files\\tech_articles.pdf", format: "A4"});
   await browser.close();
   console.log(error("Browser Closed"));
