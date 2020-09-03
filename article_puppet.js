@@ -10,7 +10,7 @@ const success = chalk.bold.green;
   const website = "https://techcrunch.com/tag/series-a/"
 
   const browser = await puppeteer.launch({
-    headless: true,
+    headless: false,
     slowMo: 100,
   });
 
